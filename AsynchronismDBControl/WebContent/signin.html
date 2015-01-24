@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript" src="jquery-latest.js"></script>
+<script type="text/javascript">
+	$(window).load(function() {
+		$('#email').keydown(function() {
+			$('#p').html($('#email').val());
+		});
+	});
+</script>
+</head>
+<body>
+	<form action="result.jsp" method="post">
+		<input type="email" name="email" id="email"/>
+		<input type="submit"/>
+	</form>
+	<p id="p"></p>
+</body>
+</html>
