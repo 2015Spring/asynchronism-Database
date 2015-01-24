@@ -1,22 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript" src="jquery-latest.js"></script>
 <script type="text/javascript">
-	$(window).load(function() {
-		$('#email').keydown(function() {
-			$('#p').html($('#email').val());
+	var xmlReq;
+	
+	function createAjax() {
+		xmlReq = new XMLHttpRequest();
+	}
+	
+	$(function() {
+		$('#email').keyup(function() {
+			var tmp = $('#email').val().indexOf("@");
+			if(0 < tmp && tmp < $('#email').val().length-1) {
+				createAjax();
+				var email = $('#email').val();
+				xmlReq.onreadystatechange = callBack;
+				xmlReq.open("POST", "check_email.jsp?email="+email, true);
+				xmlReq.send(null);
+			}
 		});
 	});
+	
+	function callBack() {
+		if(xmlReq.readyState == 4) {
+			if(xmlReq.status == 200) {
+				printData();
+			}
+		}
+	}
+	
+	function printData() {
+		var result = xmlReq.responseXML;
+		var rootNode = result.documentElement;
+		var rootValue = rootNode.firstChild.nodeValue;
+		
+		if(rootValue == "true") {
+			$('#result').html("사용가능");
+		} else {
+			$('#result').html("사용불가");
+		}
+	}
 </script>
 </head>
 <body>
-	<form action="result.jsp" method="post">
+	<form action="result.jsp" method="post" id="myform">
 		<input type="email" name="email" id="email"/>
+		<div id="result"></div>
 		<input type="submit"/>
 	</form>
-	<p id="p"></p>
 </body>
 </html>

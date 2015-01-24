@@ -1,12 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Insert title here</title>
-</head>
-<body>
+<%@page import="java.sql.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<% 
+String email = request.getParameter("email"); 
 
-</body>
-</html>
+Class.forName("com.mysql.jdbc.Driver");
+Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ktds", "root", "1234");
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery("select email from users where email = '" + email + "'");
+
+StringBuffer str = new StringBuffer();
+str.append("<?ml version='1.0' encoding='utf-8'?>");
+str.append("<root>");
+if(rs.next()) {
+	str.append("false");
+} else {
+	str.append("true");
+}
+str.append("</root>");
+
+response.setContentType("text/xml;charset=utf-8");
+response.getWriter().write(str.toString());
+%>

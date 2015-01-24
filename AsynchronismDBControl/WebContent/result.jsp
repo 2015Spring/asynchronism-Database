@@ -10,21 +10,7 @@
 <body>
 	<% 
 	String email = request.getParameter("email"); 
-	
-	Class.forName("com.mysql.jdbc.Driver");
-	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ktds", "root", "1234");
-	Statement stmt = con.createStatement();
-	
-	stmt.executeUpdate("insert into users (email) values ('" + email + "')");
-	
-	ResultSet rs = stmt.executeQuery("select * from users");
-	
-	while(rs.next()) {
-		String value = rs.getString("email");
 	%>
-		<%= value %><br>
-	<%
-	}
-	%>
+	<%=email %> 가입완료!
 </body>
 </html>
