@@ -13,13 +13,19 @@
 	
 	$(function() {
 		$('#email').keyup(function() {
-			var tmp = $('#email').val().indexOf("@");
-			if(0 < tmp && tmp < $('#email').val().length-1) {
+			var emailMark = $('#email').val().indexOf("@");
+			var dotMark = $('#email').val().indexOf('.');
+			var emailLength = $('#email').val().length;
+			if(1 <= emailMark
+					&& dotMark < emailLength-1
+					&& emailMark < dotMark-1) {
 				createAjax();
 				var email = $('#email').val();
 				xmlReq.onreadystatechange = callBack;
 				xmlReq.open("POST", "check_email.jsp?email="+email, true);
 				xmlReq.send(null);
+			} else {
+				$('#result').html("이메일 형식을 맞춰주세요");
 			}
 		});
 	});
@@ -27,20 +33,13 @@
 	function callBack() {
 		if(xmlReq.readyState == 4) {
 			if(xmlReq.status == 200) {
-				printData();
+				var result = xmlReq.responseXML.documentElement.firstChild.nodeValue;
+				if(result == "true") {
+					$('#result').html("사용가능한 아이디입니다");
+				} else {
+					$('#result').html("이미 사용중인 아이디입니다");
+				}
 			}
-		}
-	}
-	
-	function printData() {
-		var result = xmlReq.responseXML;
-		var rootNode = result.documentElement;
-		var rootValue = rootNode.firstChild.nodeValue;
-		
-		if(rootValue == "true") {
-			$('#result').html("사용가능");
-		} else {
-			$('#result').html("사용불가");
 		}
 	}
 </script>
